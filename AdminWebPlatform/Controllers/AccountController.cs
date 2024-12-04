@@ -1,22 +1,26 @@
-﻿using AdminWebPlatform.Contexts;
-using AdminWebPlatform.Contracts;
+﻿using AdminWebPlatform.Contracts;
 using AdminWebPlatform.Models;
+using AdminWebPlatform.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace AdminWebPlatform.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly IHasher _hashService;
+        private readonly UserRepository _userRepository;
 
-        public AccountController(ApplicationDbContext context, IHasher hashService)
+        public AccountController(IHasher hashService, UserRepository userRepository)
         {
-            _context = context;
-            _hashService = hashService;
+            _hashService = hashService ?? throw new ArgumentNullException(nameof(hashService));
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+        }
+
+        public IActionResult Index()
+        {
+            return View();
         }
 
         [HttpGet]
@@ -30,7 +34,7 @@ namespace AdminWebPlatform.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_context.Users.Any(user => user.Email == model.Email))
+                if (_userRepository.HasEmail(model.Email))
                 {
                     ModelState.AddModelError("", "Email is already registered.");
                     return View(model);
@@ -45,8 +49,7 @@ namespace AdminWebPlatform.Controllers
                     PasswordHash = hashedPassword
                 };
 
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
+                await _userRepository.Add(user);
 
                 return RedirectToAction("Login");
             }
@@ -65,7 +68,7 @@ namespace AdminWebPlatform.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+                User? user = await _userRepository.GetByEmail(model.Email);
 
                 if (user == null || _hashService.Verify(user.PasswordHash, model.Password) == false)
                 {
@@ -76,23 +79,22 @@ namespace AdminWebPlatform.Controllers
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Role ?? "User")
                 };
 
                 var identity = new ClaimsIdentity(claims, "Cookie");
                 var principal = new ClaimsPrincipal(identity);
-                await HttpContext.SignInAsync("Cookie", principal);
+                await HttpContext.SignInAsync(principal);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index");
             }
 
             return View(model);
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync("Cookie");
+            await HttpContext.SignOutAsync();
             return RedirectToAction("Login");
         }
     }

@@ -10,5 +10,6 @@ namespace AdminWebPlatform.Contexts
         }
 
         public DbSet<User> Users { get; set; }
+        public required DbSet<Role> Roles { get; set; }
     }
 }

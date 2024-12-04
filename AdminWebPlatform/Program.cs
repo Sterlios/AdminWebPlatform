@@ -1,5 +1,6 @@
 using AdminWebPlatform.Contexts;
 using AdminWebPlatform.Contracts;
+using AdminWebPlatform.Repositories;
 using AdminWebPlatform.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,12 @@ namespace AdminWebPlatform
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
             builder.Services.AddTransient<IHasher, SHA256HashService>();
+            builder.Services.AddTransient<UserRepository>();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/Account/Login";
+                    options.LogoutPath = "/Account/Logout";
                     options.AccessDeniedPath = "/Account/AccessDenied";
                 });
 

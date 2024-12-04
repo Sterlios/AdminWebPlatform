@@ -7,6 +7,6 @@
         Read = 1 << 0,
         Edit = 1 << 1,
         Create = 1 << 2,
-        Delete = 1 << 3,
+        Delete = 1 << 3
     }
 }

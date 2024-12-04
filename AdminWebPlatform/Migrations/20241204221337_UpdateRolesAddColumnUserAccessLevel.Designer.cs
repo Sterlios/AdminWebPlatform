@@ -3,6 +3,7 @@ using AdminWebPlatform.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdminWebPlatform.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241204221337_UpdateRolesAddColumnUserAccessLevel")]
+    partial class UpdateRolesAddColumnUserAccessLevel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,43 +45,6 @@ namespace AdminWebPlatform.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ContentAccessLevel = 0,
-                            Name = "User",
-                            UserAccessLevel = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ContentAccessLevel = 1,
-                            Name = "Reader",
-                            UserAccessLevel = 0
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ContentAccessLevel = 15,
-                            Name = "ContentModerator",
-                            UserAccessLevel = 0
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ContentAccessLevel = 0,
-                            Name = "UserModerator",
-                            UserAccessLevel = 15
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ContentAccessLevel = 15,
-                            Name = "Administrator",
-                            UserAccessLevel = 15
-                        });
                 });
 
             modelBuilder.Entity("AdminWebPlatform.Models.User", b =>

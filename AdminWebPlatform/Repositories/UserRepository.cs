@@ -22,12 +22,14 @@ namespace AdminWebPlatform.Repositories
             if (user is null)
                 throw new ArgumentNullException(nameof(user));
 
-            AccessLevel accessLevel = AccessLevel.None;
+            AccessLevel userAccessLevel = AccessLevel.None;
 
             if (_context.Users.Any() == false)
-                accessLevel = _context.Roles.Max(role => role.AccessLevel);
+            {
+                userAccessLevel = _context.Roles.Max(role => role.UserAccessLevel);
+            }
 
-            user.Role = _context.Roles.First(role => role.AccessLevel == accessLevel);
+            user.Role = _context.Roles.First(role => role.UserAccessLevel == userAccessLevel);
 
             _context.Users.Add(user);
 

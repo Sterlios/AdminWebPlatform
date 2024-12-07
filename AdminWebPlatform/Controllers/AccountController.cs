@@ -24,13 +24,13 @@ namespace AdminWebPlatform.Controllers
         }
 
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult Logup()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Logup(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +78,12 @@ namespace AdminWebPlatform.Controllers
 
                 var claims = new List<Claim>
                 {
+                    new Claim("UserId", user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, user.RoleId.ToString()),
+                    new Claim("UserAccessLevel", user.Role.UserAccessLevel.ToString()),
+                    new Claim("ContentAccessLevel", user.Role.ContentAccessLevel.ToString()),
                 };
 
                 var identity = new ClaimsIdentity(claims, "Cookie");

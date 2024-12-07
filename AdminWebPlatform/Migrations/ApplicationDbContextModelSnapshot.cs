@@ -41,7 +41,7 @@ namespace AdminWebPlatform.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
@@ -108,7 +108,7 @@ namespace AdminWebPlatform.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("AdminWebPlatform.Models.User", b =>

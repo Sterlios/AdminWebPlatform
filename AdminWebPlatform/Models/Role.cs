@@ -6,5 +6,7 @@
         public string Name { get; set; }
         public AccessLevel ContentAccessLevel { get; set; }
         public AccessLevel UserAccessLevel { get; set; }
+
+        public ICollection<User> Users { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using AdminWebPlatform.Contexts;
+using AdminWebPlatform.DTO;
 using AdminWebPlatform.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdminWebPlatform.Repositories
 {
@@ -30,6 +32,7 @@ namespace AdminWebPlatform.Repositories
             }
 
             user.Role = _context.Roles.First(role => role.UserAccessLevel == userAccessLevel);
+            user.RoleId = user.Role.Id;
 
             _context.Users.Add(user);
 
@@ -40,7 +43,20 @@ namespace AdminWebPlatform.Repositories
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(email, nameof(email));
 
-            return Task.FromResult(_context.Users.FirstOrDefault(user => user.Email == email));
+            return Task.FromResult(_context.Users
+                .Include(user => user.Role)
+                .FirstOrDefault(user => user.Email == email));
+        }
+
+        internal async Task<IQueryable<UserDTO>> GetAllAsync()
+        {
+            return _context.Users.Select(user => new UserDTO
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                Role = user.Role.Name
+            });
         }
     }
 }

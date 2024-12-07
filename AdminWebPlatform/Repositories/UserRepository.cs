@@ -32,7 +32,6 @@ namespace AdminWebPlatform.Repositories
             }
 
             user.Role = _context.Roles.First(role => role.UserAccessLevel == userAccessLevel);
-            user.RoleId = user.Role.Id;
 
             _context.Users.Add(user);
 
@@ -42,10 +41,11 @@ namespace AdminWebPlatform.Repositories
         internal Task<User?> GetByEmail(string email)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(email, nameof(email));
-
-            return Task.FromResult(_context.Users
+            User user = _context.Users
                 .Include(user => user.Role)
-                .FirstOrDefault(user => user.Email == email));
+                .FirstOrDefault(user => user.Email == email);
+
+            return Task.FromResult(user);
         }
 
         internal async Task<IQueryable<UserDTO>> GetAllAsync()

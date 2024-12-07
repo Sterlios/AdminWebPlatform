@@ -20,7 +20,11 @@ namespace AdminWebPlatform.Controllers
 
             var usersList = users.ToList();
 
+            ViewBag.UserId = int.Parse(User.FindFirst("UserId")?.Value ?? "0");
+
             ViewBag.CanEdit = ((AccessLevel)int.Parse(User.FindFirst("UserAccessLevel")?.Value ?? "0") & AccessLevel.Edit) == AccessLevel.Edit;
+
+            ViewBag.CanDelete = ((AccessLevel)int.Parse(User.FindFirst("UserAccessLevel")?.Value ?? "0") & AccessLevel.Delete) == AccessLevel.Delete;
 
             return View(usersList);
         }

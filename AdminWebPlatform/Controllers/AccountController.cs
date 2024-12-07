@@ -82,8 +82,8 @@ namespace AdminWebPlatform.Controllers
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, user.RoleId.ToString()),
-                    new Claim("UserAccessLevel", user.Role.UserAccessLevel.ToString()),
-                    new Claim("ContentAccessLevel", user.Role.ContentAccessLevel.ToString()),
+                    new Claim("UserAccessLevel", ((int)user.Role.UserAccessLevel).ToString()),
+                    new Claim("ContentAccessLevel", ((int)user.Role.ContentAccessLevel).ToString()),
                 };
 
                 var identity = new ClaimsIdentity(claims, "Cookie");

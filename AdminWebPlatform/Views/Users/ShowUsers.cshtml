@@ -23,7 +23,17 @@
                     <td>@user.Username</td>
                     <td>@user.Email</td>
                     <td>@user.Role</td>
-                    <td><partial name="_ControllButtoms"/></td>
+                    <td>
+                        @if (ViewBag.CanEdit == true)
+                        {
+                            <p>Edit</p>
+                        }
+
+                        @if (ViewBag.CanDelete == true && ViewBag.UserId != @user.Id)
+                        {
+                            <p>Delete</p>
+                        }
+                    </td>
                 </tr>
             }
         </tbody>
